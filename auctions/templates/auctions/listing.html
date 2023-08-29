@@ -1,0 +1,96 @@
+{% extends "auctions/layout.html" %}
+
+{%block title%}
+    {{listing.title}}
+{%endblock%}
+{% block body %}
+    <div class="border-bottom border-4 " align = 'center'>
+        <h1>{{listing.title}}</h1>
+    </div>
+
+    <div>
+        <strong>Description</strong>
+        <p>
+            {{listing.description}}
+        </p>
+    </div>
+    {% if listing.active%}
+        <div>
+            Current price:{{listing.starting_bid}}$
+        </div>
+    {%endif%}
+    <div>
+        <h3>Categories</h3>
+        <ul>
+            {%for category in categories%}
+                <li>{{category}}</li>
+            {%endfor%}    
+        </ul>
+    </div>
+    <div>
+        listied by : {{listing.user.username}}
+    </div>
+    <div>
+        {% if user.is_authenticated %}
+            {% if listing.active%}
+                {% if user.username != listing.user.username%}
+                <form method = "post">
+                    {% csrf_token %} 
+                    <input type="submit" value = "{{watchlist_message}}">
+                    <input type = "text"  name = "watchlist" value = "True" hidden>
+                </form>   
+                <form method="post">
+                    {% csrf_token %} 
+                    <input type = "submit" name = "submit" value = "Make a bid:">
+                    <input type = "number" name = "bid" value = "{{listing.starting_bid}}" style="width: 65px;">
+                </form>
+                    {% if error_message%}
+                        <div class="error_message">
+                            <strong>{{error_message}}</strong>
+                        </div>
+                    {%endif%}  
+                {%else%}
+                    <form method = "post">
+                        {% csrf_token %}
+                        <input type = "submit" value="Close bid" name = "close bid">
+                    </form>      
+                {%endif%}
+            {%else%}
+                    {% if bid.last_bidder.username%}
+                    <div>
+                        Won by <strong>{{bid.last_bidder.username}}</strong> 
+                    </div>
+                    <div>
+                        Bought for <strong>{{listing.starting_bid}}$</strong>
+                    </div>
+                    {%else%}
+                        <div>
+                            No one bought it: {{listing.user.username}} closed it.
+                        </div>
+                    {%endif%}    
+            {%endif%}
+            <div>
+                <h2>Comments</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <textarea name = "content" placeholder="Write your comment here"></textarea>
+                    <input type = "submit" value = "send" name = "comment">
+                </form>
+            </div>    
+        {%else%}    
+            You are not signed in you can't make a bid (<a href="{% url 'login'%}">sign in now</a>)
+            <h2>Comments</h2>
+        {%endif%}    
+    </div>
+    <div style = "margin: 5px;">
+        <ul>
+            {%for comment in comments%}
+            <div class = "comment">
+                <h4>{{comment.user.username}}</h4>
+                {{comment.content}}
+            </div>
+            {%endfor%} 
+        </ul>
+    </div>
+
+{% endblock %}

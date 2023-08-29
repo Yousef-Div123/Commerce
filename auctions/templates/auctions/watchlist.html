@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+{%block title%}
+    My Watchlist
+{%endblock%}
+{% block body %}
+    <h2>My Watchlist</h2>
+    <div class="flex-container">
+        {% for listing in listings%} 
+        <div class="listing_main" onclick = "location.href = '{% url 'listing' listing.title%}'">
+            <h1 id = "listing_title">{{listing.title}}</h1>
+            <div id = "listing_description">
+                Description:{{listing.description}}
+            </div>
+            <div>
+                <strong>current bid:</strong>{{listing.starting_bid}}
+            </div>
+            {% if listing.active %}
+                <div class="active" style="background-color: lightgreen;">
+                    Open
+                </div>    
+            {% else %}
+                <div class="active" style="background-color: tomato;">
+                    Closed
+                </div> 
+            {%endif%}   
+        </div>
+        {%endfor%}
+    </div> 
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "auctions/layout.html" %}
+
+{%block title%}
+    Home
+{%endblock%}
+{% block body %}
+    <h2>Active Listings</h2>
+
+
+    <div class="flex-container">
+        {% for listing in listings%} 
+        {% if listing.active %}
+        <div class="listing_main" onclick = "location.href = '{% url 'listing' listing.title%}'">
+    
+            <h1 id = "listing_title">{{listing.title}}</h1>
+            <div id = "listing_description">
+                Description: {{listing.description}}
+            </div>
+            <div>
+                <strong>Price: </strong>{{listing.starting_bid}}$
+            </div>
+            {% if listing.active %}
+                <div class="active" style="background-color: lightgreen;">
+                    Open
+                </div>    
+            {% else %}
+                <div class="active" style="background-color: tomato;">
+                    Closed
+                </div> 
+            {%endif%}  
+        </div>
+        {%endif%}
+        {%endfor%} 
+    </div>
+
+{% endblock %}

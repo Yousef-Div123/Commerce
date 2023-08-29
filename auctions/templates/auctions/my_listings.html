@@ -1,0 +1,97 @@
+{% extends "auctions/layout.html" %}
+
+{%block title%}
+    My listings
+{%endblock%}
+{% block body %}
+    <h2>My Listings</h2>
+
+    <div class="flex-container">
+        {%if empty_listings == False %}
+            {% for listing in listings%} 
+                {%if listing.user.username == user.username%}
+                    <div class="listing_main" onclick = "location.href = '{% url 'listing' listing.title%}'">
+                
+                        <h1 id = "listing_title">{{listing.title}}</h1>
+                        <div id = "listing_description">
+                            Description: {{listing.description}}
+                        </div>
+                        <div>
+                            <strong>Price: </strong>{{listing.starting_bid}}$
+                        </div>
+                        {% if listing.active %}
+                            <div class="active" style="background-color: lightgreen;">
+                                Open
+                            </div>    
+                        {% else %}
+                            <div class="active" style="background-color: tomato;">
+                                Closed
+                            </div> 
+                        {%endif%}  
+                    </div> 
+                {%endif%}    
+            {%endfor%}
+        {%else%}
+            <div>
+                You have no listings <a href="{% url 'add'%}"> Create your listing now</a>
+            </div>
+        {%endif%}        
+    </div>
+    <div style="margin-top: 10px;">
+        <h2>Listings which I won</h2>
+        <div class="flex-container">
+            {%if empty_bids == False %}
+                {% for bid in bids%} 
+                    <div class="listing_main" onclick = "location.href = '{% url 'listing' bid.listing.title%}'">
+                
+                        <h1 id = "listing_title">{{bid.listing.title}}</h1>
+                        <div id = "listing_description">
+                            Description: {{bid.listing.description}}
+                        </div>
+                        <div>
+                            <strong>Price: </strong>{{bid.listing.starting_bid}}$
+                        </div>
+                    </div> 
+                {%endfor%}
+            {%else%}
+                <div>
+                    You haven't won any listings <a href="{% url 'index'%}"> buy some now!</a>
+                </div>
+            {%endif%}        
+        </div>  
+    </div>
+    <div style="margin-top: 10px;" class="flex-container">
+        <h2>Listings which I joined</h2>
+        <div class="flex-container">
+            {%if empty_joined_bids == False %}
+                {% for joined_bid in joined_bids%} 
+                    <div class="listing_main" onclick = "location.href = '{% url 'listing' joined_bid.listing.title%}'">
+                
+                        <h1 id = "listing_title">{{joined_bid.listing.title}}</h1>
+                        <div id = "listing_description">
+                            Description: {{joined_bid.listing.description}}
+                        </div>
+                        <div>
+                            <strong>Price: </strong>{{joined_bid.listing.starting_bid}}$
+                        </div>
+                        {% if joined_bid.listing.active %}
+                        <div class="active" style="background-color: lightgreen;">
+                            Open
+                        </div>    
+                        {% else %}
+                            <div class="active" style="background-color: tomato;">
+                                Closed
+                            </div> 
+                        {%endif%} 
+                    </div> 
+                {%endfor%}
+            {%else%}
+                <div>
+                    You haven't joined any listings <a href="{% url 'index'%}"> join some now!</a>
+                </div>
+            {%endif%}        
+        </div>  
+    </div>
+ 
+
+{% endblock %}
